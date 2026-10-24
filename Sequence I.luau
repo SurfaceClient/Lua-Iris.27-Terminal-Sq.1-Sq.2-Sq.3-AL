@@ -1,5 +1,5 @@
 -- SequenceManipulator (ModularScript) All and the animations and sequences for the 
--- Iris.27 Terminal testing takes place here
+-- Iris.27 Terminal testing takes place here.
 -- By SurfaceClient (BevenHB)
 
 -- Seq.1: [Chronals + HexBars + Inversion] In total: 479 Lines of code (including comments and whitespace)
