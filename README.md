@@ -4,7 +4,7 @@ This requires a certain Hierarchy in studio to setup in order for this code to f
 
 alongside the fact that you MUST have your own Image and Sound IDs,
 
-for i still have not made a file for the hierarchy but i intend to in the future,
+[UPDATE] all the hierarchies are now in a folder, you must set up your own Exactly as you see in the images,
 
 but currently you can only review, copy or just modify the code to your liking,
 
