@@ -3,31 +3,31 @@
 	------------------------------------------------
 	-- Indicator
 	------------------------------------------------
-
+	
 	task.wait(3)
-	Play(A.SOUNDS.INDICATOR)
-
+	play(A.SOUNDS.INDICATOR)
+	
 	task.wait(0.7)
+	
+	local surface = A.SurfaceClient
 
-	local Surface = A.SurfaceClient
+	if surface then
 
-	if Surface then
+		surface.Visible = true
+		surface.ImageTransparency = 1
 
-		Surface.Visible = true
-		Surface.ImageTransparency = 1
+		local grad = surface:FindFirstChildOfClass("UIGradient")
 
-		local Grad = Surface:FindFirstChildOfClass("UIGradient")
+		if grad then
 
-		if Grad then
+			grad.Offset = Vector2.new(-1,0)
 
-			Grad.Offset = Vector2.new(-1,0)
-
-			Tween(Surface,0.7,{
+			tween(surface,0.7,{
 				ImageTransparency = 0
 			})
 
 			TweenService:Create(
-				Grad,
+				grad,
 				TweenInfo.new(
 					1.5,
 					Enum.EasingStyle.Linear
@@ -38,10 +38,10 @@
 			):Play()
 		end
 	end
-
+	
 	task.delay(0.2,function()
 
-		Tween(
+		tween(
 			A.BlackScreen1,
 			0.7,
 			{
@@ -50,26 +50,26 @@
 			}
 		)
 
-	end)
+	end
 	------------------------------------------------
 	-- Bracket Sequence
 	------------------------------------------------
-	local ClosedL = UDim2.new(0.459,0,0.378,0)
-	local ClosedR = UDim2.new(0.474,0,0.378,0)
+	local closedL = UDim2.new(0.459,0,0.378,0)
+	local closedR = UDim2.new(0.474,0,0.378,0)
 
-	local OpenL = UDim2.new(0.242,0,0.378,0)
-	local OpenR = UDim2.new(0.682,0,0.378,0)
-
+	local openL = UDim2.new(0.242,0,0.378,0)
+	local openR = UDim2.new(0.682,0,0.378,0)
+	
 	task.wait(0.7)
+	
+	A.LeftBracket.Position = closedL
+	A.RightBracket.Position = closedR
 
-	A.LeftBracket.Position = ClosedL
-	A.RightBracket.Position = ClosedR
-
-	Flick({A.LeftBracket,A.RightBracket},2,A.SOUNDS.FLICK)
+	flick({A.LeftBracket,A.RightBracket},2,A.SOUNDS.FLICK)
 
 	task.wait(1)
-
-	local Ghosts = {
+	
+	local ghosts = {
 
 		A.LeftBracketAfterImage,
 		A.LeftBracketAfterImageCopy,
@@ -78,18 +78,18 @@
 		A.RightBracketAfterImageCopy
 	}
 
-	for _,G in ipairs(Ghosts) do
+	for _,g in ipairs(ghosts) do
 
-		G.Visible = true
-		G.ImageTransparency = 1
+		g.Visible = true
+		g.ImageTransparency = 1
 	end
+	
+	play(A.SOUNDS.SLIDE)
+	
+	for _,g in ipairs(ghosts) do
 
-	Play(A.SOUNDS.SLIDE)
-
-	for _,G in ipairs(Ghosts) do
-
-		Tween(
-			G,
+		tween(
+			g,
 			0.01,
 			{
 				ImageTransparency = 0
@@ -99,10 +99,10 @@
 
 	task.delay(0.005,function()
 
-		for _,G in ipairs(Ghosts) do
+		for _,g in ipairs(ghosts) do
 
-			Tween(
-				G,
+			tween(
+				g,
 				0.05,
 				{
 					ImageTransparency = 1
@@ -110,9 +110,9 @@
 			)
 		end
 	end)
-
-	Tween(A.LeftBracket,0.1,{Position=OpenL})
-	Tween(A.RightBracket,0.1,{Position=OpenR}).Completed:Wait()
+	
+	tween(A.LeftBracket,0.1,{Position=openL})
+	tween(A.RightBracket,0.1,{Position=openR}).Completed:Wait()
 
 	------------------------------------------------
 	-- STEREOTYPE + Lens
@@ -120,33 +120,33 @@
 
 	task.wait(.5)
 
-	Flick({A.StereotypeText},2,A.SOUNDS.FLICK)
+	flick({A.StereotypeText},2,A.SOUNDS.FLICK)
 
-	Set(A.Lens,true)
+	set(A.Lens,true)
 
 	task.wait(.7)
 
-	Play(A.SOUNDS.ROTATE)
-	Tween(A.Lens,0.9,{Rotation=-70}).Completed:Wait()
-	Tween(A.Lens,0.8,{Rotation=120}).Completed:Wait()
-
+	play(A.SOUNDS.ROTATE)
+	tween(A.Lens,0.9,{Rotation=-70}).Completed:Wait()
+	tween(A.Lens,0.8,{Rotation=120}).Completed:Wait()
+	
 	task.wait(3)
 
-	Flick({A.StereotypeText,A.Lens},2,A.SOUNDS.FLICK)
+	flick({A.StereotypeText,A.Lens},2,A.SOUNDS.FLICK)
 
 	task.wait(.5)
 
-	Set(A.StereotypeText,false)
-	Set(A.Lens,false)
-
-
+	set(A.StereotypeText,false)
+	set(A.Lens,false)
+	
+	
 	------------------------------------------------
 	-- Close Brackets + Fade Out
 	------------------------------------------------
 
 	task.wait(.1)
-
-	Tween(
+	
+	tween(
 		A.BlackScreen1,
 		.7,
 		{
@@ -155,18 +155,18 @@
 		}
 	)
 
-	Tween(
+	tween(
 		A.SurfaceClient,
 		.4,
 		{
 			ImageTransparency = 1
 		}
 	)
-
-	Play(A.SOUNDS.SLIDE)
-
+	
+	play(A.SOUNDS.SLIDE)
+	
 	if A.SurfaceClient then
-		Tween(
+		tween(
 			A.SurfaceClient,
 			.4,
 			{
@@ -174,23 +174,24 @@
 			}
 		)
 	end
+	
+	tween(A.LeftBracket,.2,{Position=closedL})
+	tween(A.RightBracket,.2,{Position=closedR}).Completed:Wait()
 
-	Tween(A.LeftBracket,.2,{Position=ClosedL})
-	Tween(A.RightBracket,.2,{Position=ClosedR}).Completed:Wait()
-
-	Set(A.LeftBracket,false)
-	Set(A.RightBracket,false)
+	set(A.LeftBracket,false)
+	set(A.RightBracket,false)
 	if A.SurfaceClient then
 		A.SurfaceClient.Visible = false
 	end
-
+	
 	task.wait(.5)
 
 	print("Sequence 2 Finished")
 	print("Starting Sequence 3")
 
 	SequenceManipulator.StartTerminal(A)
-
+	
 end
 
 
+floor.math  
