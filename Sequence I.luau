@@ -28,40 +28,40 @@ local SequenceManipulator = {}
 -- Sound (No Drift)
 ----------------------------------------------------
 
-local function Play(Id, Volume)
-	if not Id or Id == "" then return end
+local function play(id, volume)
+	if not id or id == "" then return end
 
-	local S = Instance.new("Sound")
-	S.SoundId = Id
-	S.Volume = Volume or 1.7
-	S.Parent = SoundService
+	local s = Instance.new("Sound")
+	s.SoundId = Id
+	s.Volume = volume or 1.7
+	s.Parent = SoundService
 
-	S:Play()
-	Debris:AddItem(S, 8)
-	return S
+	s:Play()
+	Debris:AddItem(s, 8)
+	return s
 end
 
 ----------------------------------------------------
 -- Ui Helpers
 ----------------------------------------------------
 
-local function Set(Obj, V)
-	if Obj and Obj:IsA("GuiObject") then
-		Obj.Visible = V
+local function set(obj, v)
+	if obj and obj:IsA("GuiObject") then
+		obj.Visible = v
 	end
 end
 
-local function Tween(Obj, T, Props)
-	if not Obj then return end
+local function tween(obj, t, props)
+	if not obj then return end
 
-	local Tw = TweenService:Create(
-		Obj,
-		TweenInfo.new(T, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-		Props
+	local tw = TweenService:Create(
+		obj,
+		TweenInfo.new(t, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		props
 	)
 
-	Tw:Play()
-	return Tw
+	tw:Play()
+	return tw
 end
 
 
@@ -69,53 +69,53 @@ local ContentProvider = game:GetService("ContentProvider")
 
 local LoadedSounds = {}
 
-local function PreloadSounds(SoundTable)
+local function preloadSounds(soundTable)
 
-	local Assets = {}
+	local assets = {}
 
-	for Name,Id in pairs(SoundTable) do
+	for name,id in pairs(soundTable) do
 
-		if typeof(Id) == "string" and Id ~= "" then
+		if typeof(id) == "string" and id ~= "" then
 
-			local S = Instance.new("Sound")
+			local s = Instance.new("Sound")
 
-			S.Name = Name
-			S.SoundId = Id
-			S.Volume = 1
-			S.Parent = SoundService
+			s.Name = name
+			s.SoundId = id
+			s.Volume = 1
+			s.Parent = SoundService
 
-			LoadedSounds[Name] = S
-			table.insert(Assets,S)
+			LoadedSounds[name] = s
+			table.insert(assets,s)
 		end
 	end
 
-	ContentProvider:PreloadAsync(Assets)
+	ContentProvider:PreloadAsync(assets)
 end
 
-local function PlayCached(Name, Volume)
+local function playCached(name, volume)
 
-	local Source = LoadedSounds[Name]
+	local source = LoadedSounds[name]
 
-	if not Source then
+	if not source then
 		return
 	end
 
-	local Clone = Source:Clone()
+	local clone = source:Clone()
 
-	Clone.Volume = Volume or 1
-	Clone.Parent = SoundService
+	clone.Volume = volume or 1
+	clone.Parent = SoundService
 
-	Clone:Play()
+	clone:Play()
 
-	Debris:AddItem(Clone,8)
+	Debris:AddItem(clone,8)
 
-	return Clone
+	return clone
 end
 ----------------------------------------------------
 -- HexBar System
 ----------------------------------------------------
 
-local HexMap = {
+local HEX_MAP = {
 	Undo = {8,10},
 	Gate = {4,5,10},
 	Cast = {5,7},
@@ -133,7 +133,7 @@ local HexMap = {
 	Page = {1,2,3,4,5,6,7,8,9,10}
 }
 
-local HexColor = {
+local HEX_COLOR = {
 	Undo = Color3.fromRGB(179,0,255),
 	Gate = Color3.fromRGB(255,255,255),
 	Cast = Color3.fromRGB(0,27,177),
@@ -151,55 +151,55 @@ local HexColor = {
 	Page = Color3.fromRGB(9, 9, 9)
 }
 
-local function ResetHex(HexFrame)
-	if not HexFrame then return end
-	for I = 1,10 do
-		local B = HexFrame:FindFirstChild("HexBar"..I)
-		if B then
-			B.Visible = false
+local function resetHex(hexFrame)
+	if not hexFrame then return end
+	for i = 1,10 do
+		local b = hexFrame:FindFirstChild("HexBar"..i)
+		if b then
+			b.Visible = false
 		end
 	end
 end
 
-local function ApplyHex(HexFrame, ChronalName, FadeInTime)
+local function applyHex(hexFrame, chronalName, fadeInTime)
 
-	if not HexFrame then
+	if not hexFrame then
 		return
 	end
 
-	ResetHex(HexFrame)
+	resetHex(hexFrame)
 
-	local Map = HexMap[ChronalName]
-	local Col = HexColor[ChronalName]
+	local map = HEX_MAP[chronalName]
+	local col = HEX_COLOR[chronalName]
 
-	if not Map then
+	if not map then
 		return
 	end
 
-	for _,I in ipairs(Map) do
+	for _,i in ipairs(map) do
 
-		local B = HexFrame:FindFirstChild("HexBar"..I)
+		local b = hexFrame:FindFirstChild("HexBar"..i)
 
-		if B then
+		if b then
 
-			B.Visible = true
-			B.ZIndex = 20
+			b.Visible = true
+			b.ZIndex = 20
+			
+			if b:IsA("ImageLabel") then
 
-			if B:IsA("ImageLabel") then
+				b.ImageTransparency = 1
+				b.ImageColor3 = col
 
-				B.ImageTransparency = 1
-				B.ImageColor3 = Col
-
-				Tween(B, FadeInTime,{
+				tween(b, fadeInTime,{
 					ImageTransparency = 0
 				})
 
 			else
 
-				B.BackgroundTransparency = 1
-				B.BackgroundColor3 = Col
+				b.BackgroundTransparency = 1
+				b.BackgroundColor3 = col
 
-				Tween(B, FadeInTime,{
+				tween(b, fadeInTime,{
 					BackgroundTransparency = 0
 				})
 
@@ -212,74 +212,74 @@ end
 --  Sync Flicker (for Brackets, Stereotype, Lens)
 ----------------------------------------------------
 
-local function Flick(Objects, Count, SoundId)
-	for I = 1, Count do
+local function flick(objects, count, soundId)
+	for i = 1, count do
 
-		for _,O in ipairs(Objects) do
-			Set(O,true)
+		for _,o in ipairs(objects) do
+			set(o,true)
 		end
 
-		Play(SoundId,1)
+		play(soundId,1)
 		task.wait(0.033)
 
-		for _,O in ipairs(Objects) do
-			Set(O,false)
+		for _,o in ipairs(objects) do
+			set(o,false)
 		end
 
 		task.wait(0.033)
 	end
 
-	for _,O in ipairs(Objects) do
-		Set(O,true)
+	for _,o in ipairs(objects) do
+		set(o,true)
 	end
 
-	Play(SoundId,1)
+	play(soundId,1)
 end
 
 ----------------------------------------------------
 -- Chronals (UPDATED. Fixed Visibility and Timing)
 ----------------------------------------------------
 
-local function RunChronals(A)
-	local Order = {
+local function runChronals(A)
+	local order = {
 		"Undo","Gate","Cast","Hint","Cell",
 		"Dirt","Sand","Tear","Zero","Rush",
 		"Zion","Swap","Word","Jump","Page"
 	}
 
-	local Timings = {
+	local timings = {
 		{0.15,0.6},{0.15,0.45},{0.15,0.3},{0.15,0.1},{0.15,0.09},
 		{0.15,0.08},{0.15,0.07},{0.15,0.06},{0.15,0.05},{0.1,0.04},
 		{0.1,0.04},{0.1,0.04},{0.08,0.03},{0.08,0.03},{0.08,0.03}
 	}
 
-	local HexFrame = A.HexaColors
+	local hexFrame = A.HexaColors
 
-	for I,Name in ipairs(Order) do
-		local Obj = A.Chronals:FindFirstChild(Name)
-		if Obj then
+	for i,name in ipairs(order) do
+		local obj = A.Chronals:FindFirstChild(name)
+		if obj then
 
-			Obj.Visible = true
-			Obj.ImageTransparency = 1
-
-			ApplyHex(
-				HexFrame,
-				Name,
-				Timings[I][1]
+			obj.Visible = true
+			obj.ImageTransparency = 1
+			
+			applyHex(
+				hexFrame,
+				name,
+				timings[i][1]
 			)
 
-			Play(A.SOUND.CHRONAL,0.2)
-			Play(A.SOUNDS.CHRONAL,0.7)
-			Play(A.SOUND.CHRONAL,0.3)
+			play(A.SOUND.CHRONAL,0.2)
+			play(A.SOUNDS.CHRONAL,0.7)
+			play(A.SOUND.CHRONAL,0.3)
 
-			Tween(Obj,Timings[I][1],{ImageTransparency = 0}).Completed:Wait()
+			tween(obj,timings[i][1],{ImageTransparency = 0}).Completed:Wait()
 
-			if Name == "Page" then
+			if name == "Page" then
 
-				for _,Img in ipairs(A.Chronals:GetChildren()) do
-					if Img:IsA("ImageLabel") then
-						Img.ImageColor3 = Color3.fromRGB(0,255,183)
-						Img.ZIndex = 25
+				for _,img in ipairs(A.Chronals:GetChildren()) do
+					if img:IsA("ImageLabel") then
+						img.ImageColor3 = Color3.fromRGB(0,255,183)
+						img.ZIndex = 25
 					end
 				end
 
@@ -288,7 +288,7 @@ local function RunChronals(A)
 
 				task.delay(1,function()
 
-					Tween(
+					tween(
 						A.BlackScreen1,
 						1,{
 							BackgroundColor3 =
@@ -298,34 +298,34 @@ local function RunChronals(A)
 
 				end)
 
-				return Obj
+				return obj
 			end
+			
+			local map = HEX_MAP[name]
 
-			local Map = HexMap[Name]
+			if map then
 
-			if Map then
+				for _,id in ipairs(map) do
 
-				for _,Id in ipairs(Map) do
-
-					local B = HexFrame:FindFirstChild(
-						"HexBar"..Id
+					local b = hexFrame:FindFirstChild(
+						"HexBar"..id
 					)
 
-					if B then
+					if b then
 
-						if B:IsA("ImageLabel") then
+						if b:IsA("ImageLabel") then
 
-							Tween(
-								B,
-								Timings[I][2],{
+							tween(
+								b,
+								timings[i][2],{
 									ImageTransparency = 1
 								})
 
 						else
 
-							Tween(
-								B,
-								Timings[I][2],{
+							tween(
+								b,
+								timings[i][2],{
 									BackgroundTransparency = 1
 								})
 
@@ -333,9 +333,9 @@ local function RunChronals(A)
 					end
 				end
 			end
-
-			Tween(Obj,Timings[I][2],{ImageTransparency = 1}).Completed:Wait()
-			Obj.Visible = false
+			
+			tween(obj,timings[i][2],{ImageTransparency = 1}).Completed:Wait()
+			obj.Visible = false
 		end
 	end
 end
@@ -343,29 +343,29 @@ end
 ----------------------------------------------------
 -- Page Glitch
 ----------------------------------------------------
-local function PageGlitch(A,Page)
+local function pageGlitch(A,page)
 
-	if not Page then
+	if not page then
 		return
 	end
-
-
-	local P0 = UDim2.new(0.47,0,0.424,0)
-	local P1 = UDim2.new(0.60,0,0.424,0)
-	local P2 = UDim2.new(0.34,0,0.424,0)
-	local P3 = UDim2.new(0.62,0,0.424,0)
-	local P4 = UDim2.new(0.33,0,0.424,0)
-
-	Page.Position = P0
-
+	
+	
+	local p0 = UDim2.new(0.47,0,0.424,0)
+	local p1 = UDim2.new(0.60,0,0.424,0)
+	local p2 = UDim2.new(0.34,0,0.424,0)
+	local p3 = UDim2.new(0.62,0,0.424,0)
+	local p4 = UDim2.new(0.33,0,0.424,0)
+	
+	page.Position = p0
+	
 	task.wait(0.8)
-
-	Play(A.SOUNDS.PAGEGLITCH,1)
-
-	Tween(Page,0.06,{Position=P1}).Completed:Wait()
-	Tween(Page,0.06,{Position=P2}).Completed:Wait()
-	Tween(Page,0.06,{Position=P3}).Completed:Wait()
-	Tween(Page,0.06,{Position=P4}).Completed:Wait()
+	
+	play(A.SOUNDS.PAGEGLITCH,1)
+	
+	tween(page,0.06,{Position=p1}).Completed:Wait()
+	tween(page,0.06,{Position=p2}).Completed:Wait()
+	tween(page,0.06,{Position=p3}).Completed:Wait()
+	tween(page,0.06,{Position=p4}).Completed:Wait()
 
 	task.wait(0.03)
 end
@@ -374,68 +374,68 @@ end
 ----------------------------------------------------
 
 function SequenceManipulator.Start(A)
-	PreloadSounds(A.SOUNDS)
+preloadSounds(A.SOUNDS)
 	------------------------------------------------
 	-- RESET STATE (Do not Change any of the settings unless you know what you're doing)
 	------------------------------------------------
 
-	Set(A.BlackScreen1,true)
-	Set(A.PurpleLED,false)
+	set(A.BlackScreen1,true)
+	set(A.PurpleLED,false)
 
-	Set(A.StereotypeText,false)
-	Set(A.Lens,false)
+	set(A.StereotypeText,false)
+	set(A.Lens,false)
 
-	Set(A.LeftBracket,false)
-	Set(A.RightBracket,false)
+	set(A.LeftBracket,false)
+	set(A.RightBracket,false)
 
-	local HexFrame = A.HexaColors
-	if HexFrame then ResetHex(HexFrame) end
+	local hexFrame = A.HexaColors
+	if hexFrame then resetHex(hexFrame) end
 
 	------------------------------------------------
 	-- Hold Sound
 	------------------------------------------------
 	task.wait(2)
 
-	Play(A.SOUNDS.MUSIC,0.6)
+	play(A.SOUNDS.MUSIC,0.6)
 	------------------------------------------------
 	-- Chronals
 	------------------------------------------------
-	local Page = RunChronals(A)
+	local page = runChronals(A)
 
 	task.wait(0.1)
 
-	Play(A.SOUNDS.PAGE,1)
-
+	play(A.SOUNDS.PAGE,1)
+	
 	task.wait(1)
+	
+	if page then
+		pageGlitch(A,page)
+		
+		local originalColors = {}
 
-	if Page then
-		PageGlitch(A,Page)
+		for _,img in ipairs(A.Chronals:GetChildren()) do
+			if img:IsA("ImageLabel") then
 
-		local OriginalColors = {}
+				originalColors[img] = img.ImageColor3
 
-		for _,Img in ipairs(A.Chronals:GetChildren()) do
-			if Img:IsA("ImageLabel") then
-
-				OriginalColors[Img] = Img.ImageColor3
-
-				Img.ZIndex = 25
-				Img.ImageColor3 = Color3.fromRGB(0,255,183)
+				img.ZIndex = 25
+				img.ImageColor3 = Color3.fromRGB(0,255,183)
 			end
 		end
 
 		A.BlackScreen1.BackgroundColor3 = Color3.fromRGB(255,255,255)
-
+		
 		task.delay(1,function()
 
-			for Img,Color in pairs(OriginalColors) do
+			for img,color in pairs(originalColors) do
 
-				if Img ~= Page and Img.Parent then
-					Img.ImageColor3 = Color
+				if img ~= page and img.Parent then
+					img.ImageColor3 = color
 				end
 
 			end
 
-			Tween(
+			tween(
 				A.BlackScreen1,
 				1,
 				{
@@ -444,44 +444,44 @@ function SequenceManipulator.Start(A)
 			)
 
 		end)
+		
+		for i = 1,10 do
 
-		for I = 1,10 do
-
-			local B = HexFrame:FindFirstChild(
-				"HexBar"..I
+			local b = hexFrame:FindFirstChild(
+				"HexBar"..i
 			)
 
-			if B then
+			if b then
 
-				if B:IsA("ImageLabel") then
+				if b:IsA("ImageLabel") then
 
-					Tween(B,0.1,{
+					tween(b,0.1,{
 						ImageTransparency = 1
 					})
 
 				else
 
-					Tween(B,0.1,{
+					tween(b,0.1,{
 						BackgroundTransparency = 1
 					})
 
 				end
 			end
 		end
-
+		
 		task.wait(0.1)
-
-		Page.Visible = false
-
+		
+		page.Visible = false
+		
 		if A.Inversion then
 			A.Inversion.BackgroundColor3 = Color3.fromRGB(0,0,0)
 			A.Inversion.Visible = false
 		end
 
-		for _,Img in ipairs(A.Chronals:GetChildren()) do
-			if Img:IsA("ImageLabel") then
-				Img.ImageColor3 = Color3.fromRGB(255,255,255)
+		for _,img in ipairs(A.Chronals:GetChildren()) do
+			if img:IsA("ImageLabel") then
+				img.ImageColor3 = Color3.fromRGB(255,255,255)
 			end
 		end
-
+		
 	end
