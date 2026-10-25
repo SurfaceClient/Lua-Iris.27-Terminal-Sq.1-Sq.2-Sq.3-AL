@@ -17,35 +17,35 @@ local ParallaxConnection   -- new: mouse parallax loop
 ----------------------------------------------------
 -- Configs
 ----------------------------------------------------
-local CURRENT_VERSION   = "v3.0.1"
-local LATEST_VERSION    = "v3.0.1"
-local BUILD_DATE        = "2026.06.28"
-local SERVER_OPERATIONAL = true
+local CurrentVersion   = "v3.0.1"
+local LatestVersion    = "v3.0.1"
+local BuildDate        = "2026.06.28"
+local ServerOperational = true
 
-local VALID_COMMAND = "iris.27 /x c: start"
+local ValidCommand = "iris.27 /x c: start"
 
 -- Every label that lives inside ScrollingFrame and must stay hidden
-local OUTPUT_LABEL_NAMES = {
+local OutputLabelNames = {
 	InvalidText1 = true,
 	InvalidText2 = true,
 	StartText = true,
 }
-for i = 1, 10 do
-	OUTPUT_LABEL_NAMES["CorrectText" .. i] = true
+for I = 1, 10 do
+	OutputLabelNames["CorrectText" .. I] = true
 end
 
 ----------------------------------------------------
 -- Helper: Quick Tween
 ----------------------------------------------------
-local function tween(obj, duration, props)
-	if not obj then return end
-	local t = TweenService:Create(
-		obj,
-		TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-		props
+local function Tween(Obj, Duration, Props)
+	if not Obj then return end
+	local T = TweenService:Create(
+		Obj,
+		TweenInfo.new(Duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+		Props
 	)
-	t:Play()
-	return t
+	T:Play()
+	return T
 end
 
 ----------------------------------------------------
@@ -58,9 +58,9 @@ local function ResetTerminal(A)
 		FadeOut.BackgroundTransparency = 1
 		FadeOut.ZIndex = 9999
 	end
-	
+
 	task.wait(0.15)
-	
+
 	if A.PurpleLED then
 		A.PurpleLED.Visible = true
 		A.PurpleLED.ImageTransparency = 1
@@ -72,37 +72,37 @@ local function ResetTerminal(A)
 	end
 
 	if A.Terminal then
-		for _, v in ipairs(A.Terminal:GetDescendants()) do
-			if v:IsA("ImageLabel") then
-				v.ImageTransparency = 1
-				v.Visible = true
-			elseif v:IsA("TextLabel") then
-				v.TextTransparency = 1
-				v.Visible = true
-			elseif v:IsA("TextBox") then
-				v.TextTransparency = 1
-				v.BackgroundTransparency = 1
-				v.Visible = true
+		for _, V in ipairs(A.Terminal:GetDescendants()) do
+			if V:IsA("ImageLabel") then
+				V.ImageTransparency = 1
+				V.Visible = true
+			elseif V:IsA("TextLabel") then
+				V.TextTransparency = 1
+				V.Visible = true
+			elseif V:IsA("TextBox") then
+				V.TextTransparency = 1
+				V.BackgroundTransparency = 1
+				V.Visible = true
 			end
 		end
 	end
 
 	if A.TEXTS then
-		for _, v in ipairs(A.TEXTS:GetDescendants()) do
-			if v:IsA("TextLabel") then
-				v.TextTransparency = 1
-				v.Visible = true
-			elseif v:IsA("TextBox") then
-				v.TextTransparency = 1
-				v.BackgroundTransparency = 1
-				v.Visible = true
+		for _, V in ipairs(A.TEXTS:GetDescendants()) do
+			if V:IsA("TextLabel") then
+				V.TextTransparency = 1
+				V.Visible = true
+			elseif V:IsA("TextBox") then
+				V.TextTransparency = 1
+				V.BackgroundTransparency = 1
+				V.Visible = true
 			end
 		end
 
-		for name in pairs(OUTPUT_LABEL_NAMES) do
-			local obj = A.TEXTS:FindFirstChild(name, true)
-			if obj then
-				obj.Visible = false
+		for Name in pairs(OutputLabelNames) do
+			local Obj = A.TEXTS:FindFirstChild(Name, true)
+			if Obj then
+				Obj.Visible = false
 			end
 		end
 	end
@@ -112,31 +112,31 @@ end
 -- ScanLine Loop
 ----------------------------------------------------
 local function StartScanlineLoop(A)
-	local a = A.ScanLinesA
-	local b = A.ScanLinesB
-	if not a or not b then return end
+	local A_ = A.ScanLinesA
+	local B = A.ScanLinesB
+	if not A_ or not B then return end
 
-	a.Visible = true
-	b.Visible = true
-	a.Position = UDim2.new(0, 0, 0, 0)
-	b.Position = UDim2.new(0, 0, 1, 0)
+	A_.Visible = true
+	B.Visible = true
+	A_.Position = UDim2.new(0, 0, 0, 0)
+	B.Position = UDim2.new(0, 0, 1, 0)
 
-	local speed = 0.15
+	local Speed = 0.15
 
 	if ScanConnection then
 		ScanConnection:Disconnect()
 		ScanConnection = nil
 	end
 
-	ScanConnection = RunService.RenderStepped:Connect(function(dt)
-		local move = speed * dt
-		a.Position = UDim2.new(0, 0, a.Position.Y.Scale - move, 0)
-		b.Position = UDim2.new(0, 0, b.Position.Y.Scale - move, 0)
-		if a.Position.Y.Scale <= -1 then
-			a.Position = UDim2.new(0, 0, a.Position.Y.Scale + 2, 0)
+	ScanConnection = RunService.RenderStepped:Connect(function(Dt)
+		local Move = Speed * Dt
+		A_.Position = UDim2.new(0, 0, A_.Position.Y.Scale - Move, 0)
+		B.Position = UDim2.new(0, 0, B.Position.Y.Scale - Move, 0)
+		if A_.Position.Y.Scale <= -1 then
+			A_.Position = UDim2.new(0, 0, A_.Position.Y.Scale + 2, 0)
 		end
-		if b.Position.Y.Scale <= -1 then
-			b.Position = UDim2.new(0, 0, b.Position.Y.Scale + 2, 0)
+		if B.Position.Y.Scale <= -1 then
+			B.Position = UDim2.new(0, 0, B.Position.Y.Scale + 2, 0)
 		end
 	end)
 end
@@ -150,43 +150,43 @@ local function StartParallax(A)
 		ParallaxConnection = nil
 	end
 
-	local terminal = A.Terminal
-	local texts = A.TEXTS
-	if not terminal and not texts then return end
+	local Terminal = A.Terminal
+	local Texts = A.TEXTS
+	if not Terminal and not Texts then return end
 
 	-- Capture the original rest positions (this is after everything is revealed)
-	local terminalRestPos = terminal and terminal.Position
-	local textsRestPos = texts and texts.Position
+	local TerminalRestPos = Terminal and Terminal.Position
+	local TextsRestPos = Texts and Texts.Position
 
 	-- Multiplier, Adjust to change the intensity of the Parallax  (Pixels per screen fraction)
-	local STRENGTH = 15  -- try values 8–20
+	local Strength = 15  -- try values 8–20
 
 	ParallaxConnection = RunService.Heartbeat:Connect(function()
-		local mouseLoc = UserInputService:GetMouseLocation()
-		local screenSize = workspace.CurrentCamera.ViewportSize
-		local centerX = screenSize.X / 2
-		local centerY = screenSize.Y / 2
-		local deltaX = (mouseLoc.X - centerX) / centerX   -- -1 to 1
-		local deltaY = (mouseLoc.Y - centerY) / centerY
+		local MouseLoc = UserInputService:GetMouseLocation()
+		local ScreenSize = workspace.CurrentCamera.ViewportSize
+		local CenterX = ScreenSize.X / 2
+		local CenterY = ScreenSize.Y / 2
+		local DeltaX = (MouseLoc.X - CenterX) / CenterX   -- -1 to 1
+		local DeltaY = (MouseLoc.Y - CenterY) / CenterY
 
-		local offsetX = deltaX * STRENGTH 
-		local offsetY = deltaY * STRENGTH
+		local OffsetX = DeltaX * Strength 
+		local OffsetY = DeltaY * Strength
 
-		if terminal and terminalRestPos then
-			terminal.Position = UDim2.new(
-				terminalRestPos.X.Scale,
-				terminalRestPos.X.Offset + offsetX,
-				terminalRestPos.Y.Scale,
-				terminalRestPos.Y.Offset + offsetY
+		if Terminal and TerminalRestPos then
+			Terminal.Position = UDim2.new(
+				TerminalRestPos.X.Scale,
+				TerminalRestPos.X.Offset + OffsetX,
+				TerminalRestPos.Y.Scale,
+				TerminalRestPos.Y.Offset + OffsetY
 			)
 		end
 
-		if texts and textsRestPos then
-			texts.Position = UDim2.new(
-				textsRestPos.X.Scale,
-				textsRestPos.X.Offset + offsetX * 0.5,  
-				textsRestPos.Y.Scale,
-				textsRestPos.Y.Offset + offsetY * 0.5
+		if Texts and TextsRestPos then
+			Texts.Position = UDim2.new(
+				TextsRestPos.X.Scale,
+				TextsRestPos.X.Offset + OffsetX * 0.5,  
+				TextsRestPos.Y.Scale,
+				TextsRestPos.Y.Offset + OffsetY * 0.5
 			)
 		end
 	end)
@@ -205,7 +205,7 @@ function SequenceManipulator.StartTerminal(A)
 		A.PurpleLED.Visible = true
 		A.PurpleLED.ImageTransparency = 1
 	end
-	tween(A.PurpleLED, 0.6, { ImageTransparency = 0 })
+	Tween(A.PurpleLED, 0.6, { ImageTransparency = 0 })
 
 	----------------------------------------------------
 	-- Device Detection (InfoText 6)
@@ -227,24 +227,24 @@ function SequenceManipulator.StartTerminal(A)
 		local T = A.TEXTS
 		if not T then return end
 
-		local function set(name, text)
-			local obj = T:FindFirstChild(name)
-			if obj then obj.Text = text end
+		local function Set_(Name, Text)
+			local Obj = T:FindFirstChild(Name)
+			if Obj then Obj.Text = Text end
 		end
 
-		set("InfoText1", "STEREOTYPE-SC")
-		set("InfoText6", "Roblox Cloud //" .. GetDeviceLabel() .. "// INSTANCE: m5.large\\")
-		set("InfoText7", CURRENT_VERSION .. " // BUILD: " .. BUILD_DATE)
-		set("InfoText8", "BevenHB/SurfaceClient")
-		set("InfoText9", "Iris.27 /x C: START")
+		Set_("InfoText1", "STEREOTYPE-SC")
+		Set_("InfoText6", "Roblox Cloud //" .. GetDeviceLabel() .. "// INSTANCE: m5.large\\")
+		Set_("InfoText7", CurrentVersion .. " // BUILD: " .. BuildDate)
+		Set_("InfoText8", "BevenHB/SurfaceClient")
+		Set_("InfoText9", "Iris.27 /x C: START")
 
-		local userId = T:FindFirstChild("InfoText2")
-		if userId then
-			local digits = {}
-			for i = 1, 13 do
-				digits[i] = tostring(math.random(0, 9))
+		local UserId = T:FindFirstChild("InfoText2")
+		if UserId then
+			local Digits = {}
+			for I = 1, 13 do
+				Digits[I] = tostring(math.random(0, 9))
 			end
-			userId.Text = table.concat(digits) .. " [RNG Due to Roblox's Recent Updates]"
+			UserId.Text = table.concat(Digits) .. " [RNG Due to Roblox's Recent Updates]"
 		end
 	end
 
@@ -254,14 +254,14 @@ function SequenceManipulator.StartTerminal(A)
 	local function ApplyStatus(A)
 		local T = A.TEXTS
 		if not T then return end
-		local status = T:FindFirstChild("InfoText3")
-		if not status then return end
-		if CURRENT_VERSION == LATEST_VERSION then
-			status.Text = "UP-TO-DATE ⚙"
-			status.TextColor3 = Color3.fromRGB(0, 255, 0)
+		local Status = T:FindFirstChild("InfoText3")
+		if not Status then return end
+		if CurrentVersion == LatestVersion then
+			Status.Text = "UP-TO-DATE ⚙"
+			Status.TextColor3 = Color3.fromRGB(0, 255, 0)
 		else
-			status.Text = "OUTDATED 📉"
-			status.TextColor3 = Color3.fromRGB(255, 60, 60)
+			Status.Text = "OUTDATED 📉"
+			Status.TextColor3 = Color3.fromRGB(255, 60, 60)
 		end
 	end
 
@@ -271,19 +271,19 @@ function SequenceManipulator.StartTerminal(A)
 	local function SetupClientUser(A)
 		local T = A.TEXTS
 		if not T then return end
-		local clientUser = T:FindFirstChild("ClientUser")
-		local dottedLine  = T:FindFirstChild("DottedLine")
-		local player = Players.LocalPlayer
+		local ClientUser = T:FindFirstChild("ClientUser")
+		local DottedLine  = T:FindFirstChild("DottedLine")
+		local Player = Players.LocalPlayer
 
-		if clientUser then
-			clientUser.Text = player.Name .. "@Iris.27"
+		if ClientUser then
+			ClientUser.Text = Player.Name .. "@Iris.27"
 		end
-		if dottedLine and clientUser then
-			local pieces = {}
-			for i = 1, #clientUser.Text do
-				pieces[i] = "-"
+		if DottedLine and ClientUser then
+			local Pieces = {}
+			for I = 1, #ClientUser.Text do
+				Pieces[I] = "-"
 			end
-			dottedLine.Text = table.concat(pieces, " ")
+			DottedLine.Text = table.concat(Pieces, " ")
 		end
 	end
 
@@ -293,38 +293,38 @@ function SequenceManipulator.StartTerminal(A)
 	local function StartRealtimeInfoLoop(A)
 		local T = A.TEXTS
 		if not T then return end
-		local timestamp = T:FindFirstChild("InfoText4")
-		local server = T:FindFirstChild("InfoText5")
-		local startTime = os.clock()
-		local acc = 0
+		local Timestamp = T:FindFirstChild("InfoText4")
+		local Server = T:FindFirstChild("InfoText5")
+		local StartTime = os.clock()
+		local Acc = 0
 
 		if InfoLoopConnection then
 			InfoLoopConnection:Disconnect()
 			InfoLoopConnection = nil
 		end
 
-		InfoLoopConnection = RunService.Heartbeat:Connect(function(dt)
-			acc += dt
-			if acc < 1 then return end
-			acc = 0
+		InfoLoopConnection = RunService.Heartbeat:Connect(function(Dt)
+			Acc += Dt
+			if Acc < 1 then return end
+			Acc = 0
 
-			if timestamp then
-				local now = DateTime.now():ToUniversalTime()
-				timestamp.Text = string.format(
+			if Timestamp then
+				local Now = DateTime.now():ToUniversalTime()
+				Timestamp.Text = string.format(
 					"%04d-%02d-%02d %02d:%02d:%02d UTC",
-					now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second
+					Now.Year, Now.Month, Now.Day, Now.Hour, Now.Minute, Now.Second
 				)
 			end
 
-			if server then
-				if SERVER_OPERATIONAL then
-					local elapsed = os.clock() - startTime
-					local h = math.floor(elapsed / 3600)
-					local m = math.floor((elapsed % 3600) / 60)
-					local s = math.floor(elapsed % 60)
-					server.Text = string.format("OPERATIONAL  [RUNNING TIME ON CMU: %02d:%02d:%02d]", h, m, s)
+			if Server then
+				if ServerOperational then
+					local Elapsed = os.clock() - StartTime
+					local H = math.floor(Elapsed / 3600)
+					local M = math.floor((Elapsed % 3600) / 60)
+					local S = math.floor(Elapsed % 60)
+					Server.Text = string.format("OPERATIONAL  [RUNNING TIME ON CMU: %02d:%02d:%02d]", H, M, S)
 				else
-					server.Text = "INOPERATIVE"
+					Server.Text = "INOPERATIVE"
 				end
 			end
 		end)
@@ -339,36 +339,35 @@ function SequenceManipulator.StartTerminal(A)
 		local T = A.TEXTS
 		if not T then return end
 
-		local textBox = T:FindFirstChild("TextBox")
-		local prefix  = T:FindFirstChild("Prefix")
-		local scrollFrame = T:FindFirstChild("ScrollingFrame")
-		local player = Players.LocalPlayer
+		local TextBox = T:FindFirstChild("TextBox")
+		local Prefix  = T:FindFirstChild("Prefix")
+		local ScrollFrame = T:FindFirstChild("ScrollingFrame")
+		local Player = Players.LocalPlayer
 
-		if prefix then
-			prefix.Text = player.Name .. "@Iris.27 ~ $"
+		if Prefix then
+			Prefix.Text = Player.Name .. "@Iris.27 ~ $"
 		end
 
-		if not textBox or not scrollFrame then return end
+		if not TextBox or not ScrollFrame then return end
 
-		-- Fix alignment once and for all
-		textBox.TextXAlignment = Enum.TextXAlignment.Left
+		TextBox.TextXAlignment = Enum.TextXAlignment.Left
 
-		textBox.Focused:Connect(function()
-			textBox.CursorPosition = #textBox.Text + 1
+		TextBox.Focused:Connect(function()
+			TextBox.CursorPosition = #TextBox.Text + 1
 		end)
 
-		local listLayout = scrollFrame:FindFirstChildOfClass("UIListLayout")
-		if listLayout then
-			listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		local ListLayout = ScrollFrame:FindFirstChildOfClass("UIListLayout")
+		if ListLayout then
+			ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		end
 
-		local invalidTemplate1 = scrollFrame:FindFirstChild("InvalidText1")
-		local invalidTemplate2 = scrollFrame:FindFirstChild("InvalidText2")
-		if invalidTemplate1 then invalidTemplate1.Visible = false end
-		if invalidTemplate2 then invalidTemplate2.Visible = false end
+		local InvalidTemplate1 = ScrollFrame:FindFirstChild("InvalidText1")
+		local InvalidTemplate2 = ScrollFrame:FindFirstChild("InvalidText2")
+		if InvalidTemplate1 then InvalidTemplate1.Visible = false end
+		if InvalidTemplate2 then InvalidTemplate2.Visible = false end
 
-		local submitted = false
-		local orderCounter = 0
+		local Submitted = false
+		local OrderCounter = 0
 
 		-- Outro helper – called after countdown finishes
 		local function StartOutro()
@@ -387,45 +386,45 @@ function SequenceManipulator.StartTerminal(A)
 			end
 
 			local T = A.TEXTS
-			local asciiArt = T and T:FindFirstChild("ASCIIArt")
-			local loadingSeq = A.LoadingSequence
+			local AsciiArt = T and T:FindFirstChild("ASCIIArt")
+			local LoadingSeq = A.LoadingSequence
 
 			-- Helper to play a sound from an asset id string
-			local function playSoundFromId(id, volume)
-				if not id then return end
-				local sound = Instance.new("Sound")
-				sound.SoundId = id
-				sound.Volume = volume or 1
-				sound.Parent = loadingSeq or workspace
-				sound:Play()
-				sound.Ended:Connect(function()
-					sound:Destroy()
+			local function PlaySoundFromId(Id, Volume)
+				if not Id then return end
+				local Sound = Instance.new("Sound")
+				Sound.SoundId = Id
+				Sound.Volume = Volume or 1
+				Sound.Parent = LoadingSeq or workspace
+				Sound:Play()
+				Sound.Ended:Connect(function()
+					Sound:Destroy()
 				end)
 			end
 
 			-- ASCIIArt downward tween (0.1s, Ts: Quint) + pause 0.04s --
-			if asciiArt then
-				local downPos  = UDim2.new(-1.63, -20, 0.631, 0)
-				local rightPos = UDim2.new(-1.47, -20, 0.631, 0)
-				local leftPos  = UDim2.new(-1.79, -20, 0.631, 0)
+			if AsciiArt then
+				local DownPos  = UDim2.new(-1.63, -20, 0.631, 0)
+				local RightPos = UDim2.new(-1.47, -20, 0.631, 0)
+				local LeftPos  = UDim2.new(-1.79, -20, 0.631, 0)
 
-				TweenService:Create(asciiArt, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
-					Position = downPos
+				TweenService:Create(AsciiArt, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
+					Position = DownPos
 				}):Play()
 
 				task.delay(.0 + 0, function()
-					local jitterActive = true
-					local side = true 
+					local JitterActive = true
+					local Side = true 
 
 					-- Stops jitter after fade completes
-					task.delay(.14  + .5, function() jitterActive = false end)
+					task.delay(.14  + .5, function() JitterActive = false end)
 
-					while jitterActive do
-						asciiArt.Position = side and rightPos or leftPos
+					while JitterActive do
+						AsciiArt.Position = Side and RightPos or LeftPos
 
-						playSoundFromId(A.SOUNDS.JITTER, 0.6) 
+						PlaySoundFromId(A.SOUNDS.JITTER, 0.6) 
 
-						side = not side
+						Side = not Side
 						task.wait(0.04)  -- The delay between each flip
 					end
 				end)
@@ -434,17 +433,17 @@ function SequenceManipulator.StartTerminal(A)
 			-- Global fade‑out (starts 0.12s after jitter begins) --
 			-- Jitter begins at t = 0.15 (0.1 + 0.05), so fade starts at t = 0.27
 			task.delay(.2, function()
-				if loadingSeq then
-					local tweenProps = TweenInfo.new(.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-					for _, obj in ipairs(loadingSeq:GetDescendants()) do
-						if obj:IsA("ImageLabel") then
-							TweenService:Create(obj, tweenProps, {ImageTransparency = 1}):Play()
-						elseif obj:IsA("Frame") then
-							TweenService:Create(obj, tweenProps, {BackgroundTransparency = 1}):Play()
-						elseif obj:IsA("TextLabel") or obj:IsA("TextBox") then
-							TweenService:Create(obj, tweenProps, {TextTransparency = 1}):Play()
-							if obj:IsA("TextBox") then
-								TweenService:Create(obj, tweenProps, {BackgroundTransparency = 1}):Play()
+				if LoadingSeq then
+					local TweenProps = TweenInfo.new(.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+					for _, Obj in ipairs(LoadingSeq:GetDescendants()) do
+						if Obj:IsA("ImageLabel") then
+							TweenService:Create(Obj, TweenProps, {ImageTransparency = 1}):Play()
+						elseif Obj:IsA("Frame") then
+							TweenService:Create(Obj, TweenProps, {BackgroundTransparency = 1}):Play()
+						elseif Obj:IsA("TextLabel") or Obj:IsA("TextBox") then
+							TweenService:Create(Obj, TweenProps, {TextTransparency = 1}):Play()
+							if Obj:IsA("TextBox") then
+								TweenService:Create(Obj, TweenProps, {BackgroundTransparency = 1}):Play()
 							end
 						end
 					end
@@ -455,67 +454,67 @@ function SequenceManipulator.StartTerminal(A)
 			task.wait(0.27 + 0.5)
 
 			-- BlackScreen1 fade --
-			if loadingSeq then
-				local blackScreen = loadingSeq.Parent
-				if blackScreen then
-					if blackScreen:IsA("ImageLabel") then
-						TweenService:Create(blackScreen, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
-					elseif blackScreen:IsA("Frame") then
-						TweenService:Create(blackScreen, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
+			if LoadingSeq then
+				local BlackScreen = LoadingSeq.Parent
+				if BlackScreen then
+					if BlackScreen:IsA("ImageLabel") then
+						TweenService:Create(BlackScreen, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
+					elseif BlackScreen:IsA("Frame") then
+						TweenService:Create(BlackScreen, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
 					end
 					task.wait(0.5)
 				end
 			end
 
 			-- Color inversion --
-			local cc = Instance.new("ColorCorrectionEffect")
-			cc.Brightness = 1
-			cc.Contrast = -1
-			cc.Saturation = -1
-			cc.Parent = game.Lighting
+			local Cc = Instance.new("ColorCorrectionEffect")
+			Cc.Brightness = 1
+			Cc.Contrast = -1
+			Cc.Saturation = -1
+			Cc.Parent = game.Lighting
 			task.wait(1)
-			cc:Destroy()
+			Cc:Destroy()
 
 		end
 
 		local function RunCorrectSequence()
-			submitted = true
-			textBox.TextEditable = false
-			textBox.Text = ""
+			Submitted = true
+			TextBox.TextEditable = false
+			TextBox.Text = ""
 
 			-- Move TextBox away
-			local originalPos = textBox.Position
+			local OriginalPos = TextBox.Position
 			TweenService:Create(
-				textBox,
+				TextBox,
 				TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
 				{ Position = UDim2.new(
-					originalPos.X.Scale,
-					originalPos.X.Offset + 2000,
-					originalPos.Y.Scale,
-					originalPos.Y.Offset
+					OriginalPos.X.Scale,
+					OriginalPos.X.Offset + 2000,
+					OriginalPos.Y.Scale,
+					OriginalPos.Y.Offset
 					)}
 			):Play()
 
-			for i = 1, 10 do
-				local label = scrollFrame:FindFirstChild("CorrectText" .. i)
-				if label then
-					orderCounter += 1
-					label.LayoutOrder = orderCounter
-					label.Visible = true
-					label.TextTransparency = 0
+			for I = 1, 10 do
+				local Label = ScrollFrame:FindFirstChild("CorrectText" .. I)
+				if Label then
+					OrderCounter += 1
+					Label.LayoutOrder = OrderCounter
+					Label.Visible = true
+					Label.TextTransparency = 0
 				end
-				local delay = 0.05 + (0.15 - 0.05) * (i - 1) / 9
-				task.wait(delay)
+				local Delay = 0.05 + (0.15 - 0.05) * (I - 1) / 9
+				task.wait(Delay)
 			end
 
-			local startText = scrollFrame:FindFirstChild("StartText")
-			if startText then
-				orderCounter += 1
-				startText.LayoutOrder = orderCounter
-				startText.Visible = true
-				startText.TextTransparency = 0
-				for i = 5, 0, -1 do
-					startText.Text = "> START: (" .. i .. ")"
+			local StartText = ScrollFrame:FindFirstChild("StartText")
+			if StartText then
+				OrderCounter += 1
+				StartText.LayoutOrder = OrderCounter
+				StartText.Visible = true
+				StartText.TextTransparency = 0
+				for I = 5, 0, -1 do
+					StartText.Text = "> START: (" .. I .. ")"
 					task.wait(1)
 				end
 			end
@@ -524,34 +523,34 @@ function SequenceManipulator.StartTerminal(A)
 			StartOutro()
 		end
 
-		local function RunInvalidSequence(userInput)
-			if not invalidTemplate1 or not invalidTemplate2 then return end
+		local function RunInvalidSequence(UserInput)
+			if not InvalidTemplate1 or not InvalidTemplate2 then return end
 
-			local clone1 = invalidTemplate1:Clone()
-			orderCounter += 1
-			clone1.LayoutOrder = orderCounter
-			clone1.Text = "> C:/  " .. userInput
-			clone1.Visible = true
-			clone1.TextTransparency = 0
-			clone1.Parent = scrollFrame
+			local Clone1 = InvalidTemplate1:Clone()
+			OrderCounter += 1
+			Clone1.LayoutOrder = OrderCounter
+			Clone1.Text = "> C:/  " .. UserInput
+			Clone1.Visible = true
+			Clone1.TextTransparency = 0
+			Clone1.Parent = ScrollFrame
 
-			local clone2 = invalidTemplate2:Clone()
-			orderCounter += 1
-			clone2.LayoutOrder = orderCounter
-			clone2.Text = "> bash: GetCommandName: Command not found"
-			clone2.Visible = true
-			clone2.TextTransparency = 0
-			clone2.Parent = scrollFrame
+			local Clone2 = InvalidTemplate2:Clone()
+			OrderCounter += 1
+			Clone2.LayoutOrder = OrderCounter
+			Clone2.Text = "> bash: GetCommandName: Command not found"
+			Clone2.Visible = true
+			Clone2.TextTransparency = 0
+			Clone2.Parent = ScrollFrame
 		end
 
-		textBox.FocusLost:Connect(function(enterPressed)
-			if not enterPressed or submitted then return end
-			local input = textBox.Text
-			textBox.Text = ""
-			if input:lower() == VALID_COMMAND then
+		TextBox.FocusLost:Connect(function(EnterPressed)
+			if not EnterPressed or Submitted then return end
+			local Input = TextBox.Text
+			TextBox.Text = ""
+			if Input:lower() == ValidCommand then
 				RunCorrectSequence()
 			else
-				RunInvalidSequence(input)
+				RunInvalidSequence(Input)
 			end
 		end)
 	end
@@ -576,34 +575,34 @@ function SequenceManipulator.StartTerminal(A)
 
 	task.wait(0.8)
 
-	local fadeTween = TweenService:Create(
+	local FadeTween = TweenService:Create(
 		FadeOut,
 		TweenInfo.new(3.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.InOut),
 		{ BackgroundTransparency = 1 }
 	)
-	fadeTween:Play()
-	fadeTween.Completed:Wait()
+	FadeTween:Play()
+	FadeTween.Completed:Wait()
 
 	------------------------------------------------
 	-- TERMINAL REVEAL
 	------------------------------------------------
 	if A.Terminal then
 		A.Terminal.Visible = true
-		for _, v in ipairs(A.Terminal:GetDescendants()) do
-			if v:IsA("TextLabel") then
-				v.Visible = true
-				v.TextTransparency = 1
-				tween(v, 0.25, { TextTransparency = 0 })
-			elseif v:IsA("ImageLabel") then
-				v.Visible = true
-				v.ImageTransparency = 1
-				local target = (v == A.Terminal) and 0.3 or (v.Name == "TerminalTheme" and 0.9 or 0)
-				tween(v, 0.25, { ImageTransparency = target })
-			elseif v:IsA("TextBox") then
-				v.Visible = true
-				v.TextTransparency = 1
-				v.BackgroundTransparency = 1
-				tween(v, 0.5, { TextTransparency = 0, BackgroundTransparency = 1 })
+		for _, V in ipairs(A.Terminal:GetDescendants()) do
+			if V:IsA("TextLabel") then
+				V.Visible = true
+				V.TextTransparency = 1
+				Tween(V, 0.25, { TextTransparency = 0 })
+			elseif V:IsA("ImageLabel") then
+				V.Visible = true
+				V.ImageTransparency = 1
+				local Target = (V == A.Terminal) and 0.3 or (V.Name == "TerminalTheme" and 0.9 or 0)
+				Tween(V, 0.25, { ImageTransparency = Target })
+			elseif V:IsA("TextBox") then
+				V.Visible = true
+				V.TextTransparency = 1
+				V.BackgroundTransparency = 1
+				Tween(V, 0.5, { TextTransparency = 0, BackgroundTransparency = 1 })
 			end
 		end
 	end
@@ -613,18 +612,18 @@ function SequenceManipulator.StartTerminal(A)
 	------------------------------------------------
 	if A.TEXTS then
 		A.TEXTS.Visible = true
-		for _, v in ipairs(A.TEXTS:GetDescendants()) do
-			if OUTPUT_LABEL_NAMES[v.Name] then
+		for _, V in ipairs(A.TEXTS:GetDescendants()) do
+			if OutputLabelNames[V.Name] then
 				-- still hidden
-			elseif v:IsA("TextLabel") then
-				v.Visible = true
-				v.TextTransparency = 1
-				tween(v, 0.5, { TextTransparency = 0 })
-			elseif v:IsA("TextBox") then
-				v.Visible = true
-				v.TextTransparency = 1
-				v.BackgroundTransparency = 1
-				tween(v, 0.5, { TextTransparency = 0, BackgroundTransparency = 1 })
+			elseif V:IsA("TextLabel") then
+				V.Visible = true
+				V.TextTransparency = 1
+				Tween(V, 0.5, { TextTransparency = 0 })
+			elseif V:IsA("TextBox") then
+				V.Visible = true
+				V.TextTransparency = 1
+				V.BackgroundTransparency = 1
+				Tween(V, 0.5, { TextTransparency = 0, BackgroundTransparency = 1 })
 			end
 		end
 	end
