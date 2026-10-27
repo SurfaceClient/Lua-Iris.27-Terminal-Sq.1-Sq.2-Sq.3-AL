@@ -2,9 +2,9 @@ This requires a certain Hierarchy in studio to setup in order for this code to f
 
 -- also keep in mind that you must name everything EXACTLY (CapSensetive aswell) as the declared variable names, --
 
-alongside the fact that you MUST have your own Image and Sound IDs,
+alongside the fact that you must have your own Image and Sound IDs,
 
-[UPDATE] all the hierarchies are now in a folder, you must set up your own Exactly as you see in the images,
+[Update] all the hierarchies are now in a folder, you must set up your own Exactly as you see in the images,
 
 but currently you can only review, copy or just modify the code to your liking,
 
